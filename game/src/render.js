@@ -80,7 +80,10 @@ export function drawCardFace(ctx, card, x, y, w, h, opts = {}) {
   // header band in the suit colour
   ctx.fillStyle = suit.colour; roundRect(ctx, x + 7, y + 7, w - 14, h * 0.24, 8); ctx.fill();
   text(ctx, suit.glyph, x + w / 2, y + h * 0.115, h * 0.11, '#ffffff');
-  text(ctx, suit.name.toUpperCase(), x + w / 2, y + h * 0.205, 12, '#ffffff');
+  // Narrow cards shrink the suit name and shift it left, clear of the cost badge.
+  const suitSize = w < 120 ? 10 : 12;
+  const suitX = x + w / 2 - (w < 120 ? 9 : 0);
+  text(ctx, suit.name.toUpperCase(), suitX, y + h * 0.205, suitSize, '#ffffff');
   // name
   ctx.font = `bold ${Math.max(13, w * 0.105)}px Georgia, serif`;
   const nameLines = wrapLines(ctx, card.name, w - 16).slice(0, 2);
@@ -177,8 +180,8 @@ export function drawTable(ctx, state, hoverIndex) {
   text(ctx, state.banner, 640, 438, 15, '#ffd968');
 
   lifePanel(ctx, 40, 486, PLAYER_NAME, state.player.life, state.player.ink, state.player.deck.length, '#d98a1f');
-  text(ctx, `Score — your Life ${state.player.life} · Maren ${state.rival.life}`, 190, 566, 13, '#e8d9a8', 'left');
-  text(ctx, 'Click a card or press 1–5. Unspent Ink banks: at 3+ it earns +1.', 40, 590, 12, '#bcd9f7', 'left');
+  text(ctx, `Score — your Life ${state.player.life} · Maren ${state.rival.life}`, 40, 566, 13, '#e8d9a8', 'left');
+  text(ctx, 'Click a card or press 1–5.', 40, 590, 12, '#bcd9f7', 'left');
 
   // player hand, face up
   state.player.hand.forEach((card, i) => {

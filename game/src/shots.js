@@ -28,6 +28,10 @@ export function stageShot(name, state) {
     // Set a rich, readable mid-duel frame: round 6, you ahead on Life.
     giveCard(state, 'player', 'tide-kraken');
     giveCard(state, 'rival', 'gale-veil');
+    // Keep both hands at five and make the staged pair affordable.
+    state.player.hand.splice(0, state.player.hand.length - 5);
+    state.player.ink = 6;
+    state.rival.ink = 6;
     // One more clash with a known pair at the centre of the table.
     const pIdx = state.player.hand.findIndex((c) => c.id === 'tide-kraken');
     const rIdx = state.rival.hand.findIndex((c) => c.id === 'gale-veil');
@@ -60,6 +64,9 @@ export function stageShot(name, state) {
   if (name === 'win' || name === 'loss') {
     startDuel(state);
     playScripted(state, 'anchor-verdict');
+    // The last clash of the duel, shown beside the result panel.
+    state.playerCard = { ...cardById('tide-kraken'), uid: 'final#p' };
+    state.rivalCard = { ...cardById('anchor-chain'), uid: 'final#r' };
     state.round = 11;
     if (name === 'win') { state.player.life = 12; state.rival.life = 0; }
     else { state.player.life = 0; state.rival.life = 7; }
